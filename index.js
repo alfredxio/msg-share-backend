@@ -56,6 +56,21 @@ app.get('/messages', async (req, res) => {
     }
   });
   
+  app.delete('/messages/:id', async (req, res) => {
+    try {
+      const messageId = req.params.id;
+      const message = await Message.findById(messageId);
+      if (!message) {
+        res.status(404).send('Message not found');
+        return;
+      }
+      await Message.deleteOne({_id: messageId});
+      res.send('Message deleted successfully');
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error deleting message from database');
+    }
+  });
 
 // Start the server
 const PORT = process.env.PORT || 3000;
